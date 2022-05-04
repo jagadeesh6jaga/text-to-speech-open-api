@@ -1,0 +1,91 @@
+1 ) did install all commands in base path  which is in ----------->  installer.sh
+
+        ###########################################3
+
+        git clone https://github.com/Open-Speech-EkStep/vakyansh-tts
+        cd vakyansh-tts
+        bash install.sh
+        python setup.py bdist_wheel
+        pip install -e .
+        ##########################################
+
+2) created model_dict.json inside main folder i.e text_to_speech open api
+
+    { 
+        "hi" : { "male_glow" : "hindi/male/glow_tts",
+            "male_hifi" : "hindi/male/hifi_tts",
+            "female_glow" : "hindi/female/glow_tts",
+            "female_hifi" : "hindi/female/hifi_tts" }
+    }
+
+
+3) cd tts_infer
+   wget https://storage.googleapis.com/vakyansh-open-models/translit_models.zip && unzip -q translit_models.zip
+
+4) download models :
+    download  hi model 
+
+
+5) run the server 
+
+http://0.0.0.0:5000/
+
+6) request :
+
+
+
+tts_ request :
+--------------------
+{
+    "input": [
+        {
+            "source": "भारत मेरा देश है|"
+        }
+    ],
+    "config": {
+        "gender": "female",
+        "language": {
+            "sourceLanguage": "hi"
+        }
+    }
+} 
+
+
+transliteration request:
+--------------------------
+
+
+
+{
+    "input": [
+        {
+            "source": "Hello World! ABCD क्या हाल है आपका? 1993"
+        },
+        {
+            "source": "My name is shyam"
+        }
+    ],
+    "config": {
+        "language": {
+            "sourceLanguage" :"en",
+            "targetLanguage": "ur"
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

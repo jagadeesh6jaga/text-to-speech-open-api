@@ -2,6 +2,7 @@ import base64
 import io
 
 import numpy as np
+from ray import available_resources
 import torch
 from fastapi import HTTPException
 from indicnlp.tokenize import sentence_tokenize
@@ -12,8 +13,8 @@ from tts_infer.num_to_word_on_sent import normalize_nums
 from src import log_setup
 from src.infer.model_inference import ModelService
 from src.model.language import Language
-from src.model.tts_request import TTSRequest
-from src.model.tts_response import TTSResponse, AudioFile, AudioConfig
+from src.model.tts_request import TTSRequest , TransliterationRequest
+from src.model.tts_response import TTSResponse, AudioFile, AudioConfig , TranslitResponse
 
 LOGGER = log_setup.get_logger(__name__)
 model_service = ModelService()
@@ -119,3 +120,27 @@ def run_tts(text, lang, t2s):
     mel = t2s[0].generate_mel(' ' + text_num_to_word_and_transliterated)
     audio, sr = t2s[1].generate_wav(mel)
     return audio, sr
+
+def infer_transliterate_request(request: TransliterationRequest):
+    config = request.config
+    src_lang = config.language.sourceLanguage
+    tgt_lang = config.language.targetLanguage
+
+    available_languages = ['hi', 'gu', 'mr', 'bn', 'te', 'ta', 'kn', 'pa', 'gom', 'mai', 'ml', 'sd', 'si', 'ur']
+    #["as", "bn", "gu", "hi", "kn", "ml", "mr", "or", "pa", "ta", "te"]
+    output_list = []
+    try:
+        for sentence in request.input:
+            transliterated_text=model_service.transliterate_obj.translit_sentence(sentence.source,tgt_lang)
+            LOGGER.debug(f'infer done for text {sentence.source}')
+            item=dict()
+            item["source"]=sentence.source
+            item["target"]=transliterated_text
+
+            output_list.append(item)
+        status_ ={"statusCode" : 200 , "message" : "success"}
+
+        return TranslitResponse(output=output_list, status=status_)
+    except Exception as e:
+        LOGGER.exception('Failed to infer %s', e)
+        raise e

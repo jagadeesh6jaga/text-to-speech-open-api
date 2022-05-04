@@ -24,3 +24,19 @@ class TTSResponse(BaseModel):
 class TTSFailureResponse(BaseModel):
     status: str = 'ERROR'
     status_text: str
+
+class source_target_text(BaseModel):
+    source: str
+    target: str
+
+class Status(BaseModel):
+    statusCode: int
+    message: str
+
+class TranslitResponse(BaseModel):
+    output : List[source_target_text]
+    status: Status
+
+class TransliterationFailureResponse(BaseModel):
+    status: str = 'ERROR'
+    status_text: str

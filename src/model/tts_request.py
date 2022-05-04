@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, validator
 
-from src.model.language import Language
+from src.model.language import Language ,TranslitLanguage
 
 SUPPORTED_GENDERS = {'male', 'female'}
 
@@ -33,6 +33,19 @@ class TTSConfig(BaseModel):
 class TTSRequest(BaseModel):
     input: List[Sentence]
     config: TTSConfig
+
+    @validator('input', pre=True)
+    def input_cannot_be_empty(cls, value, field):
+        if len(value) < 1:
+            raise ValueError('input cannot be empty')
+        return value
+        
+class TranslitConfig(BaseModel):
+    language: TranslitLanguage
+
+class TransliterationRequest(BaseModel):
+    input: List[Sentence]
+    config: TranslitConfig
 
     @validator('input', pre=True)
     def input_cannot_be_empty(cls, value, field):
