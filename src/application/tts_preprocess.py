@@ -1,8 +1,6 @@
 import base64
 import io
-
 import numpy as np
-from ray import available_resources
 import torch
 from fastapi import HTTPException
 from indicnlp.tokenize import sentence_tokenize
@@ -126,8 +124,7 @@ def infer_transliterate_request(request: TransliterationRequest):
     src_lang = config.language.sourceLanguage
     tgt_lang = config.language.targetLanguage
 
-    available_languages = ['hi', 'gu', 'mr', 'bn', 'te', 'ta', 'kn', 'pa', 'gom', 'mai', 'ml', 'sd', 'si', 'ur']
-    #["as", "bn", "gu", "hi", "kn", "ml", "mr", "or", "pa", "ta", "te"]
+    #available_languages = ['hi', 'gu', 'mr', 'bn', 'te', 'ta', 'kn', 'pa', 'gom', 'mai', 'ml', 'sd', 'si', 'ur']
     output_list = []
     try:
         for sentence in request.input:

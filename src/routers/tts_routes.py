@@ -25,7 +25,7 @@ async def tts(request: TTSRequest, response: Response):
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return TTSFailureResponse(status_text=f'Failed to process request {str(e)}')
 
-@router.post("/get_transliteration")
+@router.post("/transliteration")
 async def transliteration(request: TransliterationRequest, response: Response):
     LOGGER.info(f'Transliteration request {request}')
     try:
